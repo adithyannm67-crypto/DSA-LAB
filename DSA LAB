@@ -1,0 +1,146 @@
+# College of Engineering Trivandrum
+
+# Department of Computer Science and Engineering
+
+# PCCSL307: Data Structures Lab
+
+## List of exercises
+
+### Narasimhan T
+
+### narasimhan@cet.ac.in
+
+1. These days, many students show little interest in reading textbooks. Instead, they often rely on AI tools to develop superficial or vague concepts, whereas textbooks provide a more comprehensive and structured understanding of various topics. Assume I recommend some excellent books on Data structures and algorithms and ask you to read them in a collaborative way – each student reads only a subset of the book pool, to help maintain focus (especially for beginners). Help me allocate books such that the maximum number of pages assigned to any student is minimized. You are given an integer s the number of students and a sorted array pages such that pages[i] denotes the number of pages in book i. Assume there are n books. [Hint: Sorted array!! Does binary search help??]
+
+Sample run
+
+Input:
+
+pages = [10, 20, 30, 40, 50, 60] s = 4
+
+Output:
+
+Student 1: [10, 20, 30] → 60 pages Student 2: [40] → 40 pages Student 3: [50] → 50 pages Student 4: [60] → 60 pages
+
+2. Cryptography is the science of securing confidential messages exchanged between two entities by encoding them to prevent unauthorized access. More often, the messages are represented as polynomials (forget about how this is actually done) for easy encoding and in some modern cryptosystems, to make the system efficient, these polynomials are often sparse. Consider a simplified version of such a system NTRU (Nth degree Truncated polynomial Ring Unit), wherein the polynomial coefficients are in Z3, i.e., only allowed values are 0,1,2 and the polynomial degree is at most 6. For encoding a message m, first a polynomial m(x) is constructed. The encoded message c(x) called cipher is found as
+
+c(x) = m(x) + k(x)
+
+where k(x) is called the private key polynomial. Operations are done like normal addition, but modulo 3. Your task now is to input m(x), k(x) and compute c(x).
+
+Sample run
+
+Input:
+
+5 2 6 2 k(x) = x + x + 1 m(x) = x + x + 2
+
+Output:
+
+6 5 2 c(x) = x + x + 2x
+
+3. You have been hired for developing animation games by RoboGames Ltd. The game environment has multiple layers of objects as follows:
+
+Layer 1: Static buildings
+
+Layer 2: Moving vehicles
+
+Layer 3: Animated characters
+
+Each object has a position represented on a 2D grid. Since most positions are empty (no object), sparse matrices are employed to represent updates from different layers of a virtual scene. The individual matrices are added to compute the total transformation for the frame. The final transformation matrix is transposed before sending to the GPU (Graphical Processing Unit) for rendering. This is to match the column-major format expected by shaders. (Shaders are small programs that run on a GPU to determine how objects and scenes are rendered on the screen). Your job now is to input the updates from a scene and feed them to the shader.
+
+4. Write a menu-driven program for the following operations:
+
+(a) Convert an infix expression to a postfix expression.
+
+(b) Evaluate the postfix expression.
+
+5. In a faculty room, several teachers share a single WiFi-enabled printer. Each teacher sends PDF documents to the printer which are placed into the printer spool where the documents wait to be printed in the order they arrive. The printer operates at a speed of 30 ppm (pages per minute). Simulate this printing scenario with a menu to display the following:
+
+(a) name of the teacher whose PDF is currently being printed
+
+(b) waiting time for the prof. who submitted the doc PCCSL307 Lab cycle.pdf
+
+(c) name of the teacher who has to wait the most.
+
+6. In earlier days, online train ticket reservations were less popular. Everyone used to book tickets at railway station reservation counters by filing a form and waiting for their turn in a queue. For every ticket to be booked, you had to fill out separate forms. Indian Railways has a rule that only one form will be accepted from a customer at a time. If a person has to book multiple tickets, he has to book one ticket during his turn, then go to the tail of the queue and wait for his next turn. There is a token machine at the reservation office entrance where the customer is prompted for the number of tickets to be booked. The machine then issues him a token bearing a token number and the number of tickets to be booked. The customers are served in the token number order. A customer needs to take a token only once even if he has multiple tickets to book. Implement this scenario in a program with a menu to display the following:
+
+(a) the current customer being served
+
+(b) number of customers waiting
+
+(c) list all customers in the queue with the number of forms they have.
+
+7. You follow this sequence (by clicking appropriate hyperlinks or tabs) for your course registration:
+
+KTU homepage >>> E-Governance Application >>> Course/Semester Exam Registration >>> Register New Courses
+
+In the midst, you also want to download your grade card for the second semester examination the result of which got published recently. For this, you may have to click on the “Results” tab. Each hyperlink or tab has an associated address or URL that will take you to the pertinent web page when clicked. To navigate back and forth between the web pages already visited, you will be using the ‘→’ and ‘←’ buttons of the browser. Identify what data structure is appropriate for implementing these “Back” and “Forward” buttons. You are supposed to code those button functionalities in terms of the chosen data structure operations. [Hint: You may have to store the URLs ([https://ktu.edu.in/](https://ktu.edu.in/), [https://app.ktu.edu.in/login.htm](https://app.ktu.edu.in/login.htm) etc.) in the data structure.]
+
+8. In GUI based text editors like gedit, the Find and Replace feature allows you to search for all occurrences of a specific word or phrase and optionally replace them with a new one. Your task is to simulate this functionality in a simplified context as follows – The editor holds the text document as a list of words. Given a key term and a replacement word, your program should:
+
+(a) replace each occurrence of term with word (b) display the number of replacements made (c) display the updated document.
+
+9. In architectural modeling and CAD-based terrain design, curves are often used to represent features such as elevation contours, road profiles. When two such curve segments (say a curved elevation ramp and a sloped road boundary) need to be blended or analyzed for interaction such as overlapping regions or transition zones, their mathematical representations (typically polynomials) are symbolically multiplied. The resulting product captures combined geometric behavior, aiding in tasks like contour merging, surface shaping, or pattern generation. Your task is to input two curve segments given as sparse univariate polynomials (polynomials in single variable x) and compute their composite curve (product).
+10. App Cleaner is a sort of utility that comes handy to remove “unwanted apps” when your mobile runs out of storage. It basically works by uninstalling those apps that are less frequently used. For this, the utility requires to know which apps are more frequently used and which are less frequently used. Identify a suitable data structure to implement such an utility. Also, come up with an implementation in terms of the chosen data structure operations. Note that when you open an app, it becomes a “more frequently used app”.
+11. At one instant, the memory map of a 4MB (4000KB) RAM looks as in Figure 1. Processes (P1, P2, etc.) request the operating system for memory and also release the allocated memory after completing execution, A sample execution trace is shown below:
+
+P7 requests for 115 KB P10 requests for 650KB P3 completes execution P1 completes execution P6 completes execution P8 requests for 200KB P5 completes execution P2 completes execution P9 requests for 37KB P10 completes execution P9 completes execution P4 completes execution Which strategy among the first fit, best fit, and worst fit performs the best here?
+
+Figure 1: A memory map
+
+12. An expression tree is a tree that represents an arithmetic expression. The leaves of the tree are operands such as constants or variables whereas the internal nodes are all operators. The children of an operator node are its operands. Figure 2 shows an expression tree for the expression (A + B ∗ C) − ((D ∗ E + F)/G). Your job now is to input an arithmetic expression and then
+
+-
+
++ /
+
+A * + G
+
+B C * F
+
+D E
+
+Figure 2: An expression tree
+
+(a) construct an expression tree for the input. [algorithm given below]
+
+(b) display the input expression’s prefix and postfix notations. [Hint: think in terms of traversals!]
+
+You may assume that the expression has only binary operands. Construct-Expression-Tree is the algorithm for constructing a tree for the given expression. It calls an auxiliary procedure Build-Subtree to create a subtree. Two stacks viz. an operatorStack to hold the operators and a nodeStack to hold the tree nodes are used by the construction procedure.
+
+Build-Subtree(operatorStack,nodeStack) 1 root = Pop(operatorStack) 2 rightChild = Pop(nodeStack) 3 leftChild = Pop(nodeStack) 4 root.left = leftChild 5 root.right = rightChild 6 Push(nodeStack,root) Construct-Expression-Tree(expression) 1 operatorStack = a new empty stack // Initialization 2 nodeStack = a new empty stack // Initialization 3 for each char in expression 4 if IsOperand(char) 5 newNode = Create-Leaf-Node(char) 6 Push(nodeStack, newNode) 7 elseif char = = ’(’ 8 Push(operatorStack, char) 9 elseif char = = ’)’ 10 while Top(operatorStack) ̸= ’(’ 11 Build-Subtree(operatorStack, nodeStack) 12 Pop(operatorStack) // Discard the matching ’(’ 13 else // an operator 14 while (! IsEmpty(operatorStack) and Top(operatorStack) ̸= ’(’ and Precedence(Top(operatorStack)) >= Precedence(char)) 15 Build-Subtree(operatorStack, nodeStack) 16 Push(operatorStack, char) 17 while ! IsEmpty(operatorStack) 18 Build-Subtree(operatorStack, nodeStack) 19 return Pop(nodeStack) // The root of the completed tree [Kudos! You guessed it right! This is similar to the algorithm for infix to postfix conversion.]
+
+13. Construct a binary tree to efficiently implement a dictionary of ⟨word, meaning⟩ pairs. Have a menu to:
+
+(a) find the meaning of a given word
+
+(b) insert a new ⟨word, meaning⟩ pair
+
+(c) remove an existing ⟨word, meaning⟩ pair.
+
+14. The General post office wishes to give preferential treatment to its customers. The Postmaster has identified four categories of customers viz. Defence personnel, Differently abled persons, Senior citizens, and normal persons. Customers come to the post office, get their job done, and leave. As a customer enters the post office, he proceeds to a token machine which prompts for his category and then issues him a token bearing a number (in the increasing order of the time at which the customer arrived). The customers are to be given preference in the decreasing order - Differently abled persons, Senior citizens, Defence personnel, and Normal persons. Customers within the same category are to be served in the order of arrival. Implement this scenario for N customers. You may assume that there is only one service counter in the post office.
+15. Merge K sorted lists into a single sorted list using a heap. Use a min-heap to keep track of the smallest element from each list. Repeatedly extract the smallest element and insert the next element from the corresponding list into the heap until all lists are merged.
+16. Assume our department owns a robot DotSlash and you arrange a “Robo-show” to showcase its maze solving capability!! At one instant of the show, the robo is currently at a point as shown in Figure 3. The poor guy is running out of charge and somehow wants to reach the charging source (shown in the figure). It now seeks your help for the same. Since the robo has got only a few units of charge left in its battery, you want to make sure that the robo consumes the least amount of charge in its journey to the power source. Assume that the charge consumed is directly proportional to the distance traversed. Help DotSlash to find a path to the charging point, minimizing the battery power consumed.
+
+Figure 3: An a-maze-ing landscape
+
+17. The water jug problem is a classic puzzle in the domain of Artificial Intelligence. It involves determining how to measure a specific quantity of water using two or more jugs with different capacities. The challenging part is that none of the jugs have any volume markings on them. The goal here is to find a sequence of actions (filling, emptying, or pouring between the jugs) that leads to the desired measurement. Now let me make it formal:
+
+You are given three containers whose sizes are 10 litres, 7 litres, and 4 litres, respectively. The 7-litre and 4-litre containers start out full of water, but the 10-litre container is initially empty. You are allowed to perform only one type of operation: pouring the contents of one container into another, stopping when the source container is empty or the destination container is full. Your task is to determine if there is a sequence of pourings that leaves exactly 2 litres in the 7-litre or 4-litre container.
+
+18. Write a menu-driven program to read numerical data stored in a file and implement the following algorithms for sorting the numbers in descending order. Implement each algorithm as a separate function.
+
+(a) Bubble sort
+
+(b) Insertion Sort
+
+(c) Radix Sort
+
+(d) Merge Sort
+
+(e) Quick Sort
+
+Compare the number of steps involved in each method.
+
+19. Our department is organizing a tech fest with so many exciting events. By participating in an event, you can claim for activity points as stipulated by KTU. Each event i gives you A[i] activity points where A is an array. If you are not allowed to participate in more than k events, what’s the max number of points that you can earn?
+20. Hash tables have a plethora of applications. Let us now explore one. You are given the task of implementing a spell checker. First, read a file vocabulary.txt containing valid words. Use an appropriate hash function to index them into a hash table sized 25, employing chaining for collision resolution. Next, read a second file myDocument.txt, and determine the count of misspelt words in it. Also suggest corrections for the misspelt words. You may assume that myDocument.txt consists only of (possibly misspelt) valid words.
