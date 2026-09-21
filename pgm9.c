@@ -12,7 +12,6 @@ struct term *ALLOCATE_NODE()
     struct term *p = (struct term *)malloc(sizeof(struct term));
     if (p != NULL)
     {
-       
         return p;
     }
 
@@ -22,29 +21,32 @@ struct term *ALLOCATE_NODE()
 
 struct term *CREATE_POLYNOMIAL()
 {
-    struct term *prev = NULL, *head=NULL;
+    struct term *prev = NULL, *head = NULL;
 
     do
     {
-        struct term *temp = ALLOCATE_NODE();
-         int exp, coeff;
+       
+        int exp, coeff;
         printf("\nENTER THE COEFF,EXP  :");
         scanf("%d %d", &coeff, &exp);
         if (coeff == 0)
         {
             break;
         }
+         struct term *temp = ALLOCATE_NODE();
         temp->coeff = coeff;
         temp->exp = exp;
         temp->next = NULL;
-       
-        if(head==NULL){
+
+        if (head == NULL)
+        {
             head = temp;
         }
-        else{
+        else
+        {
             prev->next = temp;
         }
-        prev=temp;
+        prev = temp;
     } while (1);
 
     return head;
@@ -59,7 +61,8 @@ void PRINT_POLYNOMIAL(struct term *head)
     }
     struct term *ptr = head;
 
-    while (ptr != NULL){
+    while (ptr != NULL)
+    {
         printf("%dx^%d", ptr->coeff, ptr->exp);
         if (ptr->next != NULL)
         {
@@ -90,25 +93,45 @@ struct term *POLINAMIAL_MULTIPLY(struct term *head1, struct term *head2)
         {
 
             struct term *temp = ALLOCATE_NODE();
-            
 
             temp->coeff = ptr1->coeff * ptr2->coeff;
             temp->exp = ptr1->exp + ptr2->exp;
             temp->next = NULL;
 
-            if (headProd == NULL){
-                headProd=temp;
+            if (headProd == NULL)
+            {
+                headProd = temp;
+                prod = temp;
             }
-            else{
-                prod->next = temp;
+            else
+            {
+                struct term *p = headProd;
+                int found = 0;
+                while (p != NULL)
+                {
+                    if (p->exp == temp->exp)
+                    {
+                        found = 1;
+                        break;
+                    }
+                    p = p->next;
+                }
+                if (found)
+                {
+                    p->coeff += temp->coeff;
+                    free(temp);
+                }
+                else
+                {
+                    prod->next = temp;
+                    prod = temp;
+                }
             }
-            prod = temp;
 
             ptr2 = ptr2->next;
         }
         ptr1 = ptr1->next;
     }
-  
 
     return headProd;
 }
