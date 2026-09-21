@@ -29,14 +29,12 @@ while the last node represents the least frequently used application.
 #include <stdlib.h>
 #include <string.h>
 
-/* Structure representing an application */
 struct APP
 {
     char name[100];
     struct APP *next, *prev;
 };
 
-/* Creates and allocates memory for a new application node */
 struct APP *CREATE_NODE()
 {
     struct APP *p = (struct APP *)malloc(sizeof(struct APP));
@@ -47,7 +45,6 @@ struct APP *CREATE_NODE()
     return p;
 }
 
-/* Adds a new application at the beginning of the list */
 struct APP *ADD_NEW_APP(struct APP *head)
 {
     struct APP *curr = CREATE_NODE();
@@ -64,7 +61,6 @@ struct APP *ADD_NEW_APP(struct APP *head)
     return curr;
 }
 
-/* Displays the application list in both forward and reverse order */
 void PRINT_APP_LIST(struct APP *p)
 {
     struct APP *prev = NULL;
@@ -95,12 +91,6 @@ void PRINT_APP_LIST(struct APP *p)
     return;
 }
 
-/*
-Moves the selected application to the beginning of the list.
-
-An application becomes the most frequently used application
-when it is opened.
-*/
 struct APP *USE_AN_APP(struct APP *head)
 {
     struct APP *p = head;
@@ -132,21 +122,18 @@ struct APP *USE_AN_APP(struct APP *head)
         return head;
     }
 
-    /* App is already the most frequently used app */
     if (p == head)
     {
         printf("\nAPP IS ALREADY THE MOST FREQUENTLY USED APP\n");
         return head;
     }
 
-    /* Remove the app from its current position */
     if (p->prev != NULL)
         p->prev->next = p->next;
 
     if (p->next != NULL)
         p->next->prev = p->prev;
 
-    /* Move the app to the beginning */
     p->prev = NULL;
     p->next = head;
 
@@ -158,32 +145,9 @@ struct APP *USE_AN_APP(struct APP *head)
     return head;
 }
 
-/* Returns the total number of applications in the list */
-int LENGTH_OF_LIST(struct APP *p)
-{
-    int n = 0;
-
-    if (p == NULL)
-        return n;
-
-    while (p != NULL)
-    {
-        p = p->next;
-        n++;
-    }
-
-    return n;
-}
-
-/*
-Removes applications from the end of the list.
-
-The applications at the end of the list are considered
-the least frequently used applications.
-*/
 struct APP *REMOVE_LESS_FREQUENTLY_USED_APPS(struct APP *head)
 {
-    struct APP *p = head, *cut;
+    struct APP *p = head, *prev = NULL;
 
     if (p == NULL)
     {
@@ -191,7 +155,16 @@ struct APP *REMOVE_LESS_FREQUENTLY_USED_APPS(struct APP *head)
         return NULL;
     }
 
-    int n, length = LENGTH_OF_LIST(head);
+    int length = 0;
+
+    while (p != NULL)
+    {
+        prev = p;
+        p = p->next;
+        length++;
+    }
+
+    int n;
 
     printf("\nHOW MANY LEAST FREQUENTLY USED APPS DO YOU WANT TO REMOVE : ");
     scanf("%d", &n);
@@ -201,25 +174,21 @@ struct APP *REMOVE_LESS_FREQUENTLY_USED_APPS(struct APP *head)
         printf("\nINVALID NUMBER OF APPS\n");
         return head;
     }
-    if (n < length)
+
+    int i = 1;
+
+    while (prev != NULL && i <= n)
     {
-        for (int i = 0; i < length - n - 1; i++)
-            p = p->next;
-        cut = p->next;
-        p->next = NULL;
-    }
-    if (n == length)
-    {
-        cut = head;
-        head = NULL;
+        struct APP *temp = prev->prev;
+        free(prev);
+        prev = temp;
+        i++;
     }
 
-    while (cut != NULL)
-    {
-        struct APP *next = cut->next;
-        free(cut);
-        cut = next;
-    }
+    if (prev != NULL)
+        prev->next = NULL;
+    else
+        head = NULL;
 
     printf("\nLEAST FREQUENTLY USED APPS REMOVED SUCCESSFULLY\n");
 
