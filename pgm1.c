@@ -3,59 +3,85 @@
 void allocateBooks(int *books, int n, int s, int *result)
 {
     int sum = 0;
-    for (int i = 0; i < n; i++)
-    {
-        sum += books[i];
-    }
-    int low = books[n - 1],high = sum, mid, ans = -1;
 
-    
+    for (int i = 0; i < n; i++)
+        sum += books[i];
+
+    int low = books[n - 1], high = sum;
+    int mid, ans = -1;
 
     while (low <= high)
     {
-        int i=0;
         mid = (low + high) / 2;
-        int requiredStudents = 1, currentSum = 0;
+
+        int students = 1;
+        int currentSum = 0;
 
         for (int i = 0; i < n; i++)
         {
             if (currentSum + books[i] > mid)
             {
-                requiredStudents++;
+                students++;
                 currentSum = books[i];
             }
             else
             {
                 currentSum += books[i];
             }
-            result[i++]=currentSum;
         }
 
-        if (requiredStudents <= s)
+        if (students <= s)
         {
             ans = mid;
             high = mid - 1;
         }
         else
-        {
             low = mid + 1;
+    }
+
+    /* Store allocation */
+    int student = 0, currentSum = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (currentSum + books[i] > ans)
+        {
+            result[student++] = currentSum;
+            currentSum = books[i];
+        }
+        else
+        {
+            currentSum += books[i];
         }
     }
+
+    result[student++] = currentSum;
+
+    printf("\nAllocation:\n");
+
+    for (int i = 0; i < student; i++)
+        printf("Student %d: %d pages\n", i + 1, result[i]);
 }
 
 int main()
 {
-    int books[6] = {10, 20, 30, 40, 50, 60};
+    int n, s;
 
-    int s = 4;
+    printf("Enter number of books: ");
+    scanf("%d", &n);
 
-    int result[4];
+    int books[100];
+    int result[100];
 
-    allocateBooks(books, 6, s, result);
+    printf("Enter pages of books in sorted order:\n");
 
-    for(int i=0;i<4;i++){
-        printf("%d  ",result[i]);
-    }
+    for (int i = 0; i < n; i++)
+        scanf("%d", &books[i]);
+
+    printf("Enter number of students: ");
+    scanf("%d", &s);
+
+    allocateBooks(books, n, s, result);
 
     return 0;
 }

@@ -33,7 +33,7 @@ struct term *CREATE_POLYNOMIAL()
         {
             break;
         }
-         struct term *temp = ALLOCATE_NODE();
+        struct term *temp = ALLOCATE_NODE();
         temp->coeff = coeff;
         temp->exp = exp;
         temp->next = NULL;
