@@ -152,6 +152,9 @@ struct NODE* CONSTRUCT_EXPRESSION_TREE(char *expression)
     {
         char c = expression[i];
 
+        if (isspace(c))
+            continue;
+
         if (IS_OPEARAND(c))
         {
             struct NODE *newNode = CREATE_LEAF_NODE(c);
@@ -163,7 +166,7 @@ struct NODE* CONSTRUCT_EXPRESSION_TREE(char *expression)
         }
         else if (c == ')')
         {
-            while (OPERATOR_STACK.tos != -1)
+            while (OPERATOR_STACK.A[OPERATOR_STACK.tos] != '(')
             {
                 BUILD_SUB_TREE();
             }
@@ -186,6 +189,34 @@ struct NODE* CONSTRUCT_EXPRESSION_TREE(char *expression)
 
     return NODE_STACK_POP();
 }
+
+/* PREFIX - PREORDER */
+
+void PREFIX(struct NODE *root)
+{
+    if (root == NULL)
+        return;
+
+    printf("%c ", root->item);
+
+    PREFIX(root->left);
+    PREFIX(root->right);
+}
+
+
+/* POSTFIX - POSTORDER */
+
+void POSTFIX(struct NODE *root)
+{
+    if (root == NULL)
+        return;
+
+    POSTFIX(root->left);
+    POSTFIX(root->right);
+
+    printf("%c ", root->item);
+}
+
 
 int main()
 {
