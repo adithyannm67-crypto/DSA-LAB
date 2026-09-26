@@ -1,87 +1,130 @@
 #include <stdio.h>
 
-void allocateBooks(int *books, int n, int s, int *result)
+int isPossible(int pages[], int n, int s, int mid)
 {
-    int sum = 0;
-
+    int students = 1, currentPages = 0;
     for (int i = 0; i < n; i++)
-        sum += books[i];
+    {
+        if (pages[i] > mid)
+            return 0;
+        if (currentPages + pages[i] <= mid)
+        {
+            currentPages += pages[i];
+        }
+        else
+        {
+            students++;
+            currentPages = pages[i];
+            if (students > s)
+                return 0;
+        }
+    }
+    return 1;
+}
 
-    int low = books[n - 1], high = sum;
-    int mid, ans = -1;
+int allocateBooks(int pages[], int n, int s)
+{
+    int low = pages[0], high = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (pages[i] > low)
+            low = pages[i];
+        high += pages[i];
+    }
 
+    int answer = high;
     while (low <= high)
     {
-        mid = (low + high) / 2;
-
-        int students = 1;
-        int currentSum = 0;
-
-        for (int i = 0; i < n; i++)
+        int mid = (low + high) / 2;
+        if (isPossible(pages, n, s, mid))
         {
-            if (currentSum + books[i] > mid)
-            {
-                students++;
-                currentSum = books[i];
-            }
-            else
-            {
-                currentSum += books[i];
-            }
-        }
-
-        if (students <= s)
-        {
-            ans = mid;
+            answer = mid;
             high = mid - 1;
         }
         else
+        {
             low = mid + 1;
+        }
     }
+    return answer;
+}
 
-    /* Store allocation */
-    int student = 0, currentSum = 0;
-
+void printAllocation(int pages[], int n, int maxPages)
+{
+    int studentNo = 1, curr = 0, start = 0;
+    
     for (int i = 0; i < n; i++)
     {
-        if (currentSum + books[i] > ans)
+        if (curr + pages[i] > maxPages)
         {
-            result[student++] = currentSum;
-            currentSum = books[i];
+            printf("Student %d: [", studentNo);
+            for (int j = start; j < i; j++)
+            {
+                printf("%d", pages[j]);
+                if (j != i - 1)
+                    printf(", ");
+            }
+            printf("] -> %d pages\n", curr);
+            studentNo++;
+            start = i;
+            curr = pages[i];
         }
         else
         {
-            currentSum += books[i];
+            curr += pages[i];
         }
     }
-
-    result[student++] = currentSum;
-
-    printf("\nAllocation:\n");
-
-    for (int i = 0; i < student; i++)
-        printf("Student %d: %d pages\n", i + 1, result[i]);
+    printf("Student %d: [", studentNo);
+    for (int j = start; j < n; j++)
+    {
+        printf("%d", pages[j]);
+        if (j != n - 1)
+            printf(", ");
+    }
+    printf("] -> %d pages\n", curr);
 }
 
 int main()
 {
-    int n, s;
+    int n;
+    int s;
 
-    printf("Enter number of books: ");
-    scanf("%d", &n);
+    printf("Enter the number of books: ");
+    if (scanf("%d", &n) != 1 || n <= 0)
+    {
+        printf("Invalid number of books\n");
+        return 1;
+    }
 
-    int books[100];
-    int result[100];
-
-    printf("Enter pages of books in sorted order:\n");
-
+    int pages[100];
+    printf("Enter the pages in each book: ");
     for (int i = 0; i < n; i++)
-        scanf("%d", &books[i]);
+    {
+        if (scanf("%d", &pages[i]) != 1 || pages[i] <= 0)
+        {
+            printf("Invalid page count\n");
+            return 1;
+        }
+    }
 
-    printf("Enter number of students: ");
-    scanf("%d", &s);
+    printf("\n\nEnter the no. of students: ");
+    if (scanf("%d", &s) != 1 || s <= 0)
+    {
+        printf("Invalid number of students\n");
+        return 1;
+    }
 
-    allocateBooks(books, n, s, result);
+    if (s > n)
+    {
+        printf("Allocation not possible (more students than books)\n");
+        return 0;
+    }
+
+    int answer = allocateBooks(pages, n, s);
+
+    printf("\n");
+  
+    printAllocation(pages, n, answer);
 
     return 0;
 }

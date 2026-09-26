@@ -1,158 +1,89 @@
 #include <stdio.h>
-#include <string.h>
 
-#define MAX 50
-
-struct Document {
-    char teacher[50];
-    char filename[100];
-    int pages;
-    float waitingTime;
+struct Term
+{
+    int coeff;
+    int exp;
 };
 
-struct Document queue[MAX];
-int front = 0, rear = -1;
+int addPolynomials(struct Term msg[], int m, struct Term key[], int k, struct Term c[])
+{
+    int apos = 0, bpos = 0, cpos = 0;
 
-/* Add document to printer queue */
-void enqueue() {
-    if (rear == MAX - 1) {
-        printf("Printer queue is full!\n");
-        return;
-    }
-
-    rear++;
-
-    printf("Enter teacher name: ");
-    scanf(" %[^\n]", queue[rear].teacher);
-
-    printf("Enter PDF file name: ");
-    scanf(" %[^\n]", queue[rear].filename);
-
-    printf("Enter number of pages: ");
-    scanf("%d", &queue[rear].pages);
-
-    /* Calculate waiting time */
-    if (rear == 0)
-        queue[rear].waitingTime = 0;
-    else
-        queue[rear].waitingTime =
-            queue[rear - 1].waitingTime +
-            (queue[rear - 1].pages / 30.0);
-
-    printf("Document added to printer queue.\n");
-}
-
-/* Display currently printing document */
-void currentDocument() {
-    if (front > rear) {
-        printf("Printer queue is empty.\n");
-        return;
-    }
-
-    printf("\nCurrently being printed:\n");
-    printf("Teacher : %s\n", queue[front].teacher);
-    printf("PDF     : %s\n", queue[front].filename);
-}
-
-/* Find waiting time of PCCSL307 Lab cycle.pdf */
-void findWaitingTime() {
-    int i;
-    char target[] = "PCCSL307 Lab cycle.pdf";
-
-    for (i = front; i <= rear; i++) {
-        if (strcmp(queue[i].filename, target) == 0) {
-            printf("\nWaiting time for %s = %.2f minutes\n",
-                   target, queue[i].waitingTime);
-            return;
+    while (apos < m && bpos < k)
+    {
+        if (msg[apos].exp > key[bpos].exp)
+        {
+            c[cpos++] = msg[apos++];
+        }
+        else if (msg[apos].exp < key[bpos].exp)
+        {
+            c[cpos++] = key[bpos++];
+        }
+        else
+        {
+            int sum = (msg[apos].coeff + key[bpos].coeff) % 3;
+            if (sum != 0)
+            {
+                c[cpos].coeff = sum;
+                c[cpos].exp = msg[apos].exp;
+                cpos++;
+            }
+            apos++;
+            bpos++;
         }
     }
+    while (apos < m)
+        c[cpos++] = msg[apos++];
+    while (bpos < k)
+        c[cpos++] = key[bpos++];
 
-    printf("\nDocument not found in printer queue.\n");
+    return cpos;
 }
 
-/* Find teacher with maximum waiting time */
-void maximumWaiting() {
-    int i, maxIndex;
-
-    if (front > rear) {
-        printf("Printer queue is empty.\n");
+void printPoly(struct Term p[], int n)
+{
+    if (n == 0)
+    {
+        printf("0\n");
         return;
     }
-
-    maxIndex = front;
-
-    for (i = front + 1; i <= rear; i++) {
-        if (queue[i].waitingTime > queue[maxIndex].waitingTime)
-            maxIndex = i;
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d", p[i].coeff);
+        if (p[i].exp != 0)
+            printf("x^%d", p[i].exp);
+        if (i != n - 1)
+            printf(" + ");
     }
-
-    printf("\nTeacher who has to wait the most:\n");
-    printf("Teacher : %s\n", queue[maxIndex].teacher);
-    printf("Waiting time : %.2f minutes\n",
-           queue[maxIndex].waitingTime);
+    printf("\n");
 }
 
-/* Print the current document and remove it */
-void printDocument() {
-    if (front > rear) {
-        printf("Printer queue is empty.\n");
-        return;
-    }
+int main()
+{
+    struct Term msg[10], key[10], c[20];
+    int m, k;
 
-    printf("\nPrinting: %s (%s)\n",
-           queue[front].filename,
-           queue[front].teacher);
+    printf("Enter no. of terms in message poly m(x): ");
+    scanf("%d", &m);
+    printf("Enter coeff and exp for each term (descending exponent order):\n");
+    for (int i = 0; i < m; i++)
+        scanf("%d %d", &msg[i].coeff, &msg[i].exp);
 
-    printf("Printing completed.\n");
+    printf("\nEnter no. of terms in key poly k(x): ");
+    scanf("%d", &k);
+    printf("Enter coeff and exp for each term (descending exponent order):\n");
+    for (int i = 0; i < k; i++)
+        scanf("%d %d", &key[i].coeff, &key[i].exp);
 
-    front++;
-}
+    int n = addPolynomials(msg, m, key, k, c);
 
-int main() {
-    int choice;
-
-    do {
-        printf("\n===== PRINTER QUEUE =====\n");
-        printf("1. Add PDF to printer queue\n");
-        printf("2. Display currently printing teacher\n");
-        printf("3. Find waiting time of PCCSL307 Lab cycle.pdf\n");
-        printf("4. Display teacher with maximum waiting time\n");
-        printf("5. Print current document\n");
-        printf("6. Exit\n");
-
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                enqueue();
-                break;
-
-            case 2:
-                currentDocument();
-                break;
-
-            case 3:
-                findWaitingTime();
-                break;
-
-            case 4:
-                maximumWaiting();
-                break;
-
-            case 5:
-                printDocument();
-                break;
-
-            case 6:
-                printf("Exiting...\n");
-                break;
-
-            default:
-                printf("Invalid choice!\n");
-        }
-
-    } while (choice != 6);
+    printf("\nm(x) = ");
+    printPoly(msg, m);
+    printf("k(x) = ");
+    printPoly(key, k);
+    printf("c(x) = ");
+    printPoly(c, n);
 
     return 0;
 }
