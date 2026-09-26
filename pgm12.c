@@ -142,7 +142,7 @@ void BUILD_SUB_TREE()
     NODE_STACK_PUSH(p);
 }
 
-struct NODE* CONSTRUCT_EXPRESSION_TREE(char *expression)
+struct NODE *CONSTRUCT_EXPRESSION_TREE(char *expression)
 {
 
     OPERATOR_STACK.tos = -1;
@@ -203,7 +203,6 @@ void PREFIX(struct NODE *root)
     PREFIX(root->right);
 }
 
-
 /* POSTFIX - POSTORDER */
 
 void POSTFIX(struct NODE *root)
@@ -217,14 +216,18 @@ void POSTFIX(struct NODE *root)
     printf("%c ", root->item);
 }
 
-
 int main()
 {
     char expression[200];
     printf("\nENTER AN ARITHMETIC EXPRESSION     :     ");
     fgets(expression, sizeof(expression), stdin);
 
-    CONSTRUCT_EXPRESSION_TREE(expression);
+    struct NODE *root = CONSTRUCT_EXPRESSION_TREE(expression);
+    printf("\nPREFIX   :     ");
+    PREFIX(root);
+    printf("\nPOSTFIX  :     ");
+    POSTFIX(root);
+    return 0;
 }
 
 void STACK_PUSH(char c)
