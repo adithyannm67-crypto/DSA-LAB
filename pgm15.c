@@ -1,4 +1,4 @@
-
+/*
 15. MERGE K SORTED LISTS USING A HEAP
 
 Merge K sorted lists into a single sorted list using a heap.
@@ -27,79 +27,92 @@ The charge consumed is directly proportional to the distance traversed.
 
 Task:
 Help DotSlash find a path to the charging point while minimizing battery power consumed.
-#include<stdio.h>
+
+*/
+#include <stdio.h>
 
 #define MAX 100
 
-typedef struct HEAP{
-        int A[MAX];
-        int size,length;
+typedef struct HEAP
+{
+    int A[MAX];
+    int size, length;
 
-}HEAP;
+} HEAP;
 
-HEAP MIN_HEAPIFY(HEAP H,int i){
-        int left=2*i+1;
-        int right=2*i+2;
-        int smallest=i;
+HEAP MIN_HEAPIFY(HEAP H, int i)
+{
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    int smallest = i;
 
-        if(left<H.size && H.A[left]<H.A[smallest])
-                smallest=left;
-        if(right<H.size && H.A[right]<H.A[smallest])
-                smallest=r=ight;
+    if (left < H.size && H.A[left] < H.A[smallest])
+        smallest = left;
+    if (right < H.size && H.A[right] < H.A[smallest])
+        smallest = right;
 
-        if(smallest!i){
-                int temp=H.A[i];
-                H.A[i]=H.A[H.size];
-                H.A[H.size]=temp;
-                return  MIN_HEAPIFY(H,smallest);
-
-        }
-
+    if (smallest != i)
+    {
+        int temp = H.A[i];
+        H.A[i] = H.A[smallest];
+        H.A[smallest] = temp;
+        return MIN_HEAPIFY(H, smallest);
+    }
+    else
+    {
+        return H;
+    }
 }
 
-
-
-int main(){
-        int k,size.full=0;
-        HEAP ARRAYS[100];
-        printf("\nK    =   ");
-        for(int i=0;i<k;i++){
-                printf("\nSIZE OF LIST    %d   =   ",i+1);
-                scanf("%d",&size);
-                full+=size;
-                printf("\nENTER THE ELEMENTS IN ARRAY \n");
-                ARRAYS[i].size=0;
-                ARRAYS[i].length=size;
-                for(int j=0;j<size;j++){
-                        scanf("%d",&ARRAYS[i].A[ARRAYS[i].size++]);
-                }
+int main()
+{
+    int k, size, full = 0;
+    HEAP ARRAYS[100];
+    printf("\nK    =   ");
+    scanf("%d", &k);
+    for (int i = 0; i < k; i++)
+    {
+        printf("\nSIZE OF LIST    %d   =   ", i + 1);
+        scanf("%d", &size);
+        full += size;
+        printf("\nENTER THE ELEMENTS IN ARRAY \n");
+        ARRAYS[i].size = 0;
+        ARRAYS[i].length = size;
+        for (int j = 0; j < size; j++)
+        {
+            scanf("%d", &ARRAYS[i].A[ARRAYS[i].size++]);
         }
+    }
 
-        HEAP MERGED[1000];
+    HEAP MERGED;
+    MERGED.size = 0;
 
-        for(int i=0;i<full;i++){
-                int min=ARRAYS[0].A[0];
-                int minArrayIndex=0;
-                for(j=1;j<k;j++){
-                        if(ARRAYS[j].A[0]<min){
-                                min=ARRAYS[j].A[0];
-                                minArrayIndex=j;
-                        }
-                }
-                int temp=ARRAYS[minArrayIndex].A[0];
-                ARRAYS[minArrayIndex].A[0]=ARRAYS[minArrayIndex].A[A.size];
-                ARRAYS[minArrayIndex].size--;
+    for (int i = 0; i < full; i++)
+    {
+        int min = 999999;
+        int minArrayIndex = -1;
 
-
-
-
+        for (int j = 0; j < k; j++)
+        {
+            if (ARRAYS[j].size > 0 && ARRAYS[j].A[0] < min)
+            {
+                min = ARRAYS[j].A[0];
+                minArrayIndex = j;
+            }
         }
+        int temp = ARRAYS[minArrayIndex].A[0];
+        ARRAYS[minArrayIndex].A[0] = ARRAYS[minArrayIndex].A[ARRAYS[minArrayIndex].size - 1];
+        ARRAYS[minArrayIndex].size--;
 
+        MERGED.A[MERGED.size++] = temp;
+        if (ARRAYS[minArrayIndex].size > 0)
+            ARRAYS[minArrayIndex] = MIN_HEAPIFY(ARRAYS[minArrayIndex], 0);
+    }
 
+    printf("\nMERGED ARRAY:\n");
 
+    for (int i = 0; i < MERGED.size; i++)
+    {
+        printf("%d ", MERGED.A[i]);
+    }
 }
-
-
-
-
-

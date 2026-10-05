@@ -259,12 +259,12 @@ int main()
             printf("\nCustomers waiting: %d\n", size);
             break;
 
-        case 5:
+        case 4:
             printf("\n--- MAX HEAP ---\n");
             PRINT_TREE();
             break;
 
-        case 6:
+        case 5:
             printf("\nExiting...\n");
             break;
 
