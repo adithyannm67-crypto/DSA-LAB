@@ -1,318 +1,214 @@
-/*
-
-13. BINARY SEARCH TREE DICTIONARY
-
-Construct a binary tree to efficiently implement a dictionary of <word, meaning> pairs.
-
-Menu operations:
-
-(a) Find the meaning of a given word.
-
-(b) Insert a new <word, meaning> pair.
-
-(c) Remove an existing <word, meaning> pair.
-
-
-*/
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-typedef struct Node
+#define MAX 100
+int N;
+
+typedef struct Customer
 {
-    char word[50];
-    char meaning[100];
-    struct Node *left;
-    struct Node *right;
-} Node;
+    int category;
+    int token;
+    int priority;
+} Customer;
 
-Node *createNode(char *word, char *meaning)
+Customer A[MAX];
+int size = 0;
+
+typedef struct Heap
 {
-    Node *newNode = (Node *)malloc(sizeof(Node));
-    if (newNode == NULL)
-    {
-        printf("Memory allocation failed!\n");
-        exit(1);
-    }
-    strcpy(newNode->word, word);
-    strcpy(newNode->meaning, meaning);
-    newNode->left = NULL;
-    newNode->right = NULL;
-    return newNode;
-}
+        Customer A[MAX];
+        int size;
+        int Max;
+} Heap;
 
-Node *findNode(Node *root, char *word)
+Heap Customers;
+
+int hasPriority(Customer a, Customer b)
 {
-    Node *p = root;
-    if (root == NULL)
-    {
-        return NULL;
-    }
-    while (p != NULL)
-    {
-        if (strcmp(word, p->word) > 0)
-        {
-            p = p->right;
-        }
-        else if (strcmp(word, p->word) < 0)
-        {
-            p = p->left;
-        }
-        else
-        {
-            return p;
-        }
-    }
-    return NULL;
-}
-
-Node *insert(Node *root)
-{
-    char word[50], meaning[100];
-    printf("Enter the word to insert: ");
-    scanf("%s", word);
-    printf("Enter the meaning: ");
-    scanf("%s", meaning);
-
-    Node *newNode = createNode(word, meaning);
-    Node *p = root, *parent = NULL;
-
-    if (root == NULL)
-    {
-        root = newNode;
-        return root;
-    }
-
-    while (p != NULL)
-    {
-        parent = p;
-        if (strcmp(word, p->word) < 0)
-        {
-            p = p->left;
-            if (p == NULL)
-            {
-                parent->left = newNode;
-                break;
-            }
-        }
-        else if (strcmp(word, p->word) > 0)
-        {
-            p = p->right;
-            if (p == NULL)
-            {
-                parent->right = newNode;
-                break;
-            }
-        }
-        else
-        {
-            printf("Word already exists in the dictionary!\n");
-            free(newNode);
-            break;
-        }
-    }
-
-    return root;
-}
-
-void findMeaning(Node *root)
-{
-    char word[50];
-    printf("\nEnter the word to find: ");
-    scanf("%s", word);
-
-    Node *requiredNode = findNode(root, word);
-
-    if (requiredNode != NULL)
-    {
-        printf("Meaning: %s\n", requiredNode->meaning);
-    }
+    if (b.category < a.category)
+        return 1;
+    if (b.category == a.category && a.token < b.token)
+        return 1;
     else
-    {
-        printf("Word not found!\n");
-    }
+        return 0;
 }
 
-Node *findParent(Node *root, char *word)
+void HEAP_INSERT(int token)
 {
-    Node *p = root;
-    Node *parent = NULL;
-    while (p != NULL)
+
+    if (Customers.size >= Customers.Max)
     {
-        if (strcmp(word, p->word) < 0)
-        {
-            parent = p;
-            p = p->left;
-        }
-        else if (strcmp(word, p->word) > 0)
-        {
-            parent = p;
-            p = p->right;
-        }
-        else
-        {
-            return parent;
-        }
+        printf("Queue is full\n");
+        return;
     }
-    return NULL;
+    Customers.A[Customers.size].token = token;
+
+    printf("\n4. Differently Abled Persons");
+    printf("\n3. Senior Citizens");
+    printf("\n2. Defence Personnel");
+    printf("\n1. Normal Persons");
+
+    int category;
+    printf("\nEnter the category of customer: ");
+    scanf("%d", &category);
+
+    if (category > 4 || category < 1)
+    {
+        printf("\nInvalid category\n");
+        return;
+    }
+
+    Customers.A[Customers.size].category = category;
+
+    
+    int i = Customers.size;
+    int p = (i - 1) / 2;
+    while (i > 0 && hasPriority(Customers.A[i], Customers.A[p]))
+    {
+        Customer temp = Customers.A[i];
+        Customers.A[i] = Customers.A[p];
+        Customers.A[p] = temp;
+        i = p;
+        p = (i - 1) / 2;
+    }
+    Customers.size++;
 }
 
-Node *findInorderSuccessor(Node *root, char *word)
+void HEAP_DELETE()
 {
-    Node *NodeCorrespondsToWord = findNode(root, word);
+    Customer c;
+    if (size < 0)
+    {
+       printf("Queue is empty\n");
+        c.token = -1;
+    }    else
+    {
+        c = Customers.A[0];
 
-    if (NodeCorrespondsToWord->right != NULL)
-    {
-        Node *successor = NodeCorrespondsToWord->right;
-        while (successor->left != NULL)
+        Customers.A[0] = Customers.A[--Customers.size];
+        int i = 0;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+        while (l < Customers.size)
         {
-            successor = successor->left;
+            int min = l;
+            if (r < size && hasPriority(Customers.A[r], Customers.A[l]))
+                min = r;
+            if (!hasPriority(Customers.A[min], Customers.A[i]))
+                break;
+            Customer temp = Customers.A[i];
+            Customers.A[i] = Customers.A[min];
+            Customers.A[min] = temp;
+            i = min;
+            l = 2 * i + 1;
+            r = 2 * i + 2;
         }
-        return successor;
     }
-    else
+    if (c.token != -1)
     {
-        Node *successor = findParent(root, word);
-        Node *child = NodeCorrespondsToWord;
-        while (successor != NULL && child == successor->right)
-        {
-            child = successor;
-            successor = findParent(root, successor->word);
-        }
-        return successor;
+        printf("\nCustomer served:\n");
+        printf("Token    : %d\n", c.token);
+        printf("Category : %d\n", c.category);
     }
-}
-Node *deleteNode(Node *root)
+    return;
+}void PRINT_TREE()
 {
-    char word[50];
-    printf("Enter the word to remove: ");
-    scanf("%s", word);
-    Node *nodeToDelete = findNode(root, word);
-    Node *parent = findParent(root, word);
-    if (nodeToDelete == NULL)
+    int index = 0;
+    int level = 0;
+    int nodes = 1;
+
+    while (index < Customers.size)
     {
-        printf("Word not found in the dictionary!\n");
-        return root;
+        printf("\nLevel %d: ", level);
+
+        for (int i = 0; i < nodes && index < Customers.size; i++)
+        {
+            printf("(%d,%d) ",
+                   Customers.A[index].token,
+                   Customers.A[index].category);
+
+            index++;
+        }
+
+        level++;
+        nodes = nodes * 2;
     }
 
-    if (nodeToDelete->left == NULL && nodeToDelete->right == NULL)
-    {
-        if (parent == NULL)
-        {
-            root = NULL;
-            free(nodeToDelete);
-            return root;
-        }
-
-        if (parent->left == nodeToDelete)
-        {
-            parent->left = NULL;
-        }
-        else if (parent->right == nodeToDelete)
-        {
-            parent->right = NULL;
-        }
-        free(nodeToDelete);
-    }
-    else if (nodeToDelete->left == NULL && nodeToDelete->right != NULL)
-    {
-
-        if (parent == NULL)
-        {
-            root = nodeToDelete->right;
-            free(nodeToDelete);
-            return root;
-        }
-
-        if (parent->left == nodeToDelete)
-        {
-            parent->left = nodeToDelete->right;
-        }
-        else if (parent->right == nodeToDelete)
-        {
-            parent->right = nodeToDelete->right;
-        }
-        free(nodeToDelete);
-    }
-    else if (nodeToDelete->left != NULL && nodeToDelete->right == NULL)
-    {
-
-        if (parent == NULL)
-        {
-            root = nodeToDelete->left;
-            free(nodeToDelete);
-            return root;
-        }
-
-        if (parent->left == nodeToDelete)
-        {
-            parent->left = nodeToDelete->left;
-        }
-        else if (parent->right == nodeToDelete)
-        {
-            parent->right = nodeToDelete->left;
-        }
-        free(nodeToDelete);
-    }
-    else if (nodeToDelete->left != NULL && nodeToDelete->right != NULL)
-    {
-        Node *successor = findInorderSuccessor(root, nodeToDelete->word);
-        strcpy(nodeToDelete->word, successor->word);
-        strcpy(nodeToDelete->meaning, successor->meaning);
-        Node *successorParent = findParent(root, successor->word);
-
-      
-        if (successorParent->left == successor)
-        {
-            successorParent->left = successor->right;
-        }
-        else if (successorParent->right == successor)
-        {
-            successorParent->right = successor->right;
-        }
-        free(successor);
-    }
-
-    return root;
+    printf("\n");
 }
-
 int main()
 {
-    Node *root = NULL; // Initialize the root of the binary search tree
+    int N, choice;
+    printf("Enter the number of customers: ");
+    scanf("%d", &N);
+    Customers.Max=N;
+    Customers.size=0;
+    
+    int token=1;
     while (1)
     {
+        printf("\n\n===== GENERAL POST OFFICE =====\n");
+        printf("1. Serve customer\n");
+        printf("2. Current customer\n");
+        printf("3. Number of customers waiting\n");
+        printf("4. Display heap\n");
+        printf("5. Exit\n");
+        printf("6. Add Customer to heap\n");
 
-        printf("\nDictionary Operations:\n");
-        printf("1. Find meaning of a word\n");
-        printf("2. Insert a new <word, meaning> pair\n");
-        printf("3. Remove an existing <word, meaning> pair\n");
-        printf("4. Exit\n");
-        printf("Enter your choice: ");
-
-        int choice;
+        printf("Enter choice: ");
         scanf("%d", &choice);
-        char word[50];
-        char meaning[100];
 
         switch (choice)
         {
         case 1:
-            findMeaning(root);
-            break;
-        case 2:
-            root = insert(root);
-            break;
-        case 3:
+        {
+            if (Customers.size == 0)
+            {
+                printf("\nNo customers waiting.\n");
+            }
+            else
+            {
+                HEAP_DELETE();
+            }
 
-            root = deleteNode(root);
             break;
+        }
+
+        case 2:
+        {
+            if (Customers.size == 0)
+            {
+                printf("\nNo customers waiting.\n");
+            }
+            else
+            {
+                printf("\nCurrent customer:\n");
+                printf("Token    : %d\n", Customers.A[0].token);
+                printf("Category : %d\n", Customers.A[0].category);
+            }
+
+            break;
+        }
+
+        case 3:
+            printf("\nCustomers waiting: %d\n", Customers.size);
+            break;
+
         case 4:
-            exit(0);
+            printf("\n--- MAX HEAP ---\n");
+            PRINT_TREE();
+            break;
+
+        case 5:
+            printf("\nExiting...\n");
+            return 0;
+        case 6:
+            HEAP_INSERT(++token);
+            break;
         default:
-            printf("Invalid choice! Please try again.\n");
+            printf("\nInvalid choice.\n");
         }
     }
-    // The actual implementation of the binary search tree and its operations would go here.
     return 0;
 }
+
+
