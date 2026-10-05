@@ -27,4 +27,79 @@ The charge consumed is directly proportional to the distance traversed.
 
 Task:
 Help DotSlash find a path to the charging point while minimizing battery power consumed.
+#include<stdio.h>
+
+#define MAX 100
+
+typedef struct HEAP{
+        int A[MAX];
+        int size,length;
+
+}HEAP;
+
+HEAP MIN_HEAPIFY(HEAP H,int i){
+        int left=2*i+1;
+        int right=2*i+2;
+        int smallest=i;
+
+        if(left<H.size && H.A[left]<H.A[smallest])
+                smallest=left;
+        if(right<H.size && H.A[right]<H.A[smallest])
+                smallest=r=ight;
+
+        if(smallest!i){
+                int temp=H.A[i];
+                H.A[i]=H.A[H.size];
+                H.A[H.size]=temp;
+                return  MIN_HEAPIFY(H,smallest);
+
+        }
+
+}
+
+
+
+int main(){
+        int k,size.full=0;
+        HEAP ARRAYS[100];
+        printf("\nK    =   ");
+        for(int i=0;i<k;i++){
+                printf("\nSIZE OF LIST    %d   =   ",i+1);
+                scanf("%d",&size);
+                full+=size;
+                printf("\nENTER THE ELEMENTS IN ARRAY \n");
+                ARRAYS[i].size=0;
+                ARRAYS[i].length=size;
+                for(int j=0;j<size;j++){
+                        scanf("%d",&ARRAYS[i].A[ARRAYS[i].size++]);
+                }
+        }
+
+        HEAP MERGED[1000];
+
+        for(int i=0;i<full;i++){
+                int min=ARRAYS[0].A[0];
+                int minArrayIndex=0;
+                for(j=1;j<k;j++){
+                        if(ARRAYS[j].A[0]<min){
+                                min=ARRAYS[j].A[0];
+                                minArrayIndex=j;
+                        }
+                }
+                int temp=ARRAYS[minArrayIndex].A[0];
+                ARRAYS[minArrayIndex].A[0]=ARRAYS[minArrayIndex].A[A.size];
+                ARRAYS[minArrayIndex].size--;
+
+
+
+
+        }
+
+
+
+}
+
+
+
+
 
