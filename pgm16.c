@@ -3,9 +3,6 @@
 #define MAX 100
 #define INFINITY 9999
 
-
-
-
 typedef struct VERTEX
 {
     int value;
@@ -88,29 +85,17 @@ GRAPH G = {
     .edges = {{.src = 0, .dest = 1, .weight = 2}, {.src = 1, .dest = 6, .weight = 0}, {.src = 6, .dest = 7, .weight = 1}, {.src = 7, .dest = 2, .weight = 0}, {.src = 2, .dest = 3, .weight = 1}, {.src = 3, .dest = 9, .weight = 2}, {.src = 9, .dest = 10, .weight = 0}, {.src = 9, .dest = 11, .weight = 0}, {.src = 11, .dest = 12, .weight = 0}, {.src = 10, .dest = 12, .weight = 0}, {.src = 12, .dest = 13, .weight = 0}, {.src = 7, .dest = 8, .weight = 1}, {.src = 0, .dest = 4, .weight = 1}, {.src = 4, .dest = 5, .weight = 1}, {.src = 5, .dest = 16, .weight = 1}, {.src = 16, .dest = 17, .weight = 1}, {.src = 17, .dest = 18, .weight = 1}, {.src = 4, .dest = 14, .weight = 1}, {.src = 14, .dest = 15, .weight = 1}, {.src = 15, .dest = 16, .weight = 1}},
     .numOfVertices = 19};
 
-
-typedef struct HEAP{
+typedef struct HEAP
+{
     VERTEX *vertices[MAX];
     int heapSize;
-}HEAP;
+} HEAP;
 
-HEAP PRIORITY_QUEUE={.heapSize=0};
+HEAP PRIORITY_QUEUE;
 
-VERTEX* EXTRACT_MIN();
+VERTEX *EXTRACT_MIN();
 void INSERT_TO_HEAP(VERTEX *v);
-void MIN_HEAPIFY();
-
-typedef struct Queue
-{
-    VERTEX *arr[MAX];
-    int front;
-    int rear;
-}Queue;
-
-Queue Q = {.front = -1, .rear = -1};
-int isEmpty();
-void enqueue(VERTEX *value);
-VERTEX *dequeue();
+void MIN_HEAPIFY(int i);
 
 void RELAX(VERTEX *u, VERTEX *v, int w)
 {
@@ -123,6 +108,7 @@ void RELAX(VERTEX *u, VERTEX *v, int w)
 
 VERTEX *DIJKSTRA(int s)
 {
+    PRIORITY_QUEUE.heapSize=0;
     VERTEX *START = NULL;
     for (int i = 0; i < G.numOfVertices; i++)
     {
@@ -130,54 +116,78 @@ VERTEX *DIJKSTRA(int s)
         {
             START = &G.vertices[i];
         }
-        enqueue(&G.vertices[i]);
+        INSERT_TO_HEAP(&G.vertices[i]);
     }
     START->d = 0;
     START->pred = NULL;
+
+    
+
+    while(!isEmpty()){
+        // VERTEX *u=
+    }
 }
 
 int main()
 {
 }
 
-
-VERTEX* EXTRACT_MIN();
-void INSERT_TO_HEAP(VERTEX *v);
-void MIN_HEAPIFY();
-
-
-
-
-int isEmpty()
+void MIN_HEAPIFY(int i)
 {
-    return Q.front == -1 || Q.front > Q.rear;
+    int l = 2 * i + 1, r = 2 * i + 2,smallest=i;
+
+    if (l < PRIORITY_QUEUE.heapSize && PRIORITY_QUEUE.vertices[l]->d < PRIORITY_QUEUE.vertices[i]->d)
+    {
+        smallest=l;
+    }
+   
+    if (r < PRIORITY_QUEUE.heapSize && PRIORITY_QUEUE.vertices[r]->d < PRIORITY_QUEUE.vertices[i]->d)
+    {
+        smallest=r;
+    }
+
+    if(smallest!=i){
+        VERTEX* temp=PRIORITY_QUEUE.vertices[i];
+        PRIORITY_QUEUE.vertices[i]=PRIORITY_QUEUE.vertices[smallest];
+        PRIORITY_QUEUE.vertices[smallest]=temp;
+
+        MIN_HEAPIFY(smallest);
+    }
+   
+    
 }
 
-void enqueue(VERTEX *value)
+VERTEX *EXTRACT_MIN()
 {
-    if (Q.rear == MAX - 1)
+    if (PRIORITY_QUEUE.heapSize < 1)
     {
-        printf("Queue Overflow\n");
+        printf("\nHEAP UNDERFLOW\n");
+    }
+    VERTEX *min = PRIORITY_QUEUE.vertices[0];
+
+    PRIORITY_QUEUE.vertices[0] = PRIORITY_QUEUE.vertices[PRIORITY_QUEUE.heapSize];
+    PRIORITY_QUEUE.heapSize--;
+
+    MIN_HEAPIFY(0);
+    return min;
+}
+void INSERT_TO_HEAP(VERTEX *v) {
+    if(PRIORITY_QUEUE.heapSize==MAX){
+        printf("\nPRIORITY QUEUE FULL\n");
         return;
     }
+    PRIORITY_QUEUE.vertices[PRIORITY_QUEUE.heapSize++]=v;
+    int i=PRIORITY_QUEUE.heapSize;
+    int parent;
 
-    if (Q.front == -1)
-        Q.front = 0;
-
-    Q.rear++;
-    Q.arr[Q.rear] = value;
-}
-
-VERTEX *dequeue()
-{
-    if (Q.front == -1 || Q.front > Q.rear)
-    {
-        printf("Queue Underflow\n");
-        return NULL;
+    while(i>0){
+        parent=(i-1)/2;
+        if(PRIORITY_QUEUE.vertices[parent]->d<=PRIORITY_QUEUE.vertices[i]->d){
+            break;
+        }
+        VERTEX* temp=PRIORITY_QUEUE.vertices[parent];
+        PRIORITY_QUEUE.vertices[parent]=PRIORITY_QUEUE.vertices[i];
+        PRIORITY_QUEUE.vertices[i]=temp;
+        i=parent;
     }
-
-    VERTEX *value = Q.arr[Q.front];
-    Q.front++;
-
-    return value;
 }
