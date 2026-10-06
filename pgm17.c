@@ -9,13 +9,55 @@ typedef struct STATE
     struct STATE *prev;
 } STATE;
 
-STATE *States[MAX];
+
+
+struct Queue
+{
+    STATE *arr[MAX];
+    int front;
+    int rear;
+};
+
+struct Queue Q = {.front = -1, .rear = -1};
+int isEmpty()
+{
+    return Q.front == -1 || Q.front > Q.rear;
+}
+
+void enqueue(STATE *value)
+{
+    if (Q.rear == MAX - 1)
+    {
+        printf("Queue Overflow\n");
+        return;
+    }
+
+    if (Q.front == -1)
+        Q.front = 0;
+
+    Q.rear++;
+    Q.arr[Q.rear] = value;
+}
+
+STATE *dequeue()
+{
+    if (Q.front == -1 || Q.front > Q.rear)
+    {
+        printf("Queue Underflow\n");
+        return NULL;
+    }
+
+    STATE *value = Q.arr[Q.front];
+    Q.front++;
+
+    return value;
+}
 
 int isStatePresent(STATE state)
 {
     for (int i = 0; i < MAX; i++)
     {
-        if (States[i] != NULL && States[i]->v10 == state.v10 && States[i]->v7 == state.v7 && States[i]->v4 == state.v4)
+        if (Q.arr[i] != NULL && Q.arr[i]->v10 == state.v10 && Q.arr[i]->v7 == state.v7 && Q.arr[i]->v4 == state.v4)
         {
             return 1;
         }
@@ -137,76 +179,68 @@ STATE *POUR(int *source, int *destination, STATE *current)
         }
     }
 
-    if (!isStatePresent(*New))
-    {
-        for (int i = 0; i < MAX; i++)
-        {
-            if (States[i] == NULL)
-            {
-                States[i] = New;
-                break;
-            }
-        }
-    }
-    else
-    {
-        free(New);
-        return NULL;
-    }
     return New;
 }
 
 STATE *MakeAMove(STATE *current)
 {
 
+    enqueue(current);
 
-    if (current->v7 == 2 || current->v4 == 2)
+    while (!isEmpty())
     {
-        printf("Solution Found\n");
-        return current;
+        STATE *temp = dequeue();
+        if (temp != NULL)
+        {
+            if (temp->v7 == 2 || temp->v4 == 2)
+            {
+                printf("Solution Found\n");
+                return temp;
+            }
+            if (temp->v10 > 0)
+            {
+                STATE *newState = POUR(&temp->v10, &temp->v7, temp);
+                if (newState != NULL && !isStatePresent(*newState))
+                {
+                    enqueue(newState);
+                }
+                newState = POUR(&temp->v10, &temp->v4, temp);
+                if (newState != NULL && !isStatePresent(*newState))
+                {
+                    enqueue(newState);
+                }
+            }
+
+            if (temp->v7 > 0)
+            {
+                STATE *newState = POUR(&temp->v7, &temp->v10, temp);
+                if (newState != NULL && !isStatePresent(*newState))
+                {
+                    enqueue(newState);
+                }
+                newState = POUR(&temp->v7, &temp->v4, temp);
+                if (newState != NULL && !isStatePresent(*newState))
+                {
+                    enqueue(newState);
+                }
+            }
+
+            if (temp->v4 > 0)
+            {
+                STATE *newState = POUR(&temp->v4, &temp->v10, temp);
+                if (newState != NULL && !isStatePresent(*newState))
+                {
+                    enqueue(newState);
+                }
+                newState = POUR(&temp->v4, &temp->v7, temp);
+                if (newState != NULL && !isStatePresent(*newState))
+                {
+                    enqueue(newState);
+                }
+            }
+        }
     }
 
-    if (current->v10 > 0)
-    {
-        STATE *newState = POUR(&current->v10, &current->v7, current);
-        if (newState != NULL)
-        {
-            return MakeAMove(newState);
-        }
-        newState = POUR(&current->v10, &current->v4, current);
-        if (newState != NULL)
-        {
-            return MakeAMove(newState);
-        }
-    }
-
-    if (current->v7 > 0)
-    {
-        STATE *newState = POUR(&current->v7, &current->v10, current);
-        if (newState != NULL)
-        {
-            return MakeAMove(newState);
-        }
-        newState = POUR(&current->v7, &current->v4, current);
-        if (newState != NULL)
-        {
-            return MakeAMove(newState);
-        }
-    }
-
-    if (current->v4 > 0)
-    {
-        STATE *newState = POUR(&current->v4, &current->v10, current);
-        if (newState != NULL)
-        {
-            return MakeAMove(newState);
-        }
-        newState = POUR(&current->v4, &current->v7, current);
-        if (newState != NULL)
-        {
-            return MakeAMove(newState);
-        }
-    }
 
     return NULL;
 }
@@ -214,7 +248,7 @@ STATE *MakeAMove(STATE *current)
 int main()
 {
     STATE initialState = {0, 7, 4, NULL};
-        States[0] = &initialState;
+    
 
     STATE *finalState = MakeAMove(&initialState);
 
@@ -225,21 +259,21 @@ int main()
     STATE *p = finalState;
 
     printf("Path to solution:\n");
-    
-        while (p != NULL)
-        {
-            PATH[pathLength++] = *p;
-            p = p->prev;
-        }
 
-        for (int i = pathLength - 1; i >= 0; i--)
+    while (p != NULL)
+    {
+        PATH[pathLength++] = *p;
+        p = p->prev;
+    }
+
+    for (int i = pathLength - 1; i >= 0; i--)
+    {
+        printf("(%d, %d, %d) ", PATH[i].v10, PATH[i].v7, PATH[i].v4);
+        if (i > 0)
         {
-            printf("(%d, %d, %d) ", PATH[i].v10, PATH[i].v7, PATH[i].v4);
-            if (i > 0)
-            {
-                printf("-> ");
-            }
+            printf("-> ");
         }
+    }
 
     return 0;
 }
