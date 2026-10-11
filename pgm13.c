@@ -91,7 +91,7 @@ void HEAP_DELETE()
         while (l < Customers.size)
         {
             int min = l;
-            if (r < size && hasPriority(Customers.A[r], Customers.A[l]))
+            if (r < Customers.size && hasPriority(Customers.A[r], Customers.A[l]))
                 min = r;
             if (!hasPriority(Customers.A[min], Customers.A[i]))
                 break;
