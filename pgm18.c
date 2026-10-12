@@ -143,6 +143,26 @@ void merge_sort(int left, int right)
         merge(left, mid, right);
     }
 }
+void insertion_sort(int len){
+    for(int i=1; i<len; i++){
+        int item = in_ar[i];
+        int j = i-1;
+
+        while(j>=0 && item>in_ar[j]){
+            COUNTS[1]++;
+            in_ar[j+1] = in_ar[j];
+            j--;
+        }
+        if(j>=0){
+                COUNTS[1]++;
+        }
+
+        in_ar[j+1] = item;
+    }
+}
+
+
+
 
 int main()
 {
