@@ -101,12 +101,13 @@ int main()
             }
         }
         int temp = ARRAYS[minArrayIndex].A[0];
-        ARRAYS[minArrayIndex].A[0] = ARRAYS[minArrayIndex].A[ARRAYS[minArrayIndex].size - 1];
-        ARRAYS[minArrayIndex].size--;
+        for (int j = 0; j < ARRAYS[minArrayIndex].size - 1; j++)
+    ARRAYS[minArrayIndex].A[j] = ARRAYS[minArrayIndex].A[j + 1];
 
-        MERGED.A[MERGED.size++] = temp;
-        if (ARRAYS[minArrayIndex].size > 0)
-            ARRAYS[minArrayIndex] = MIN_HEAPIFY(ARRAYS[minArrayIndex], 0);
+ARRAYS[minArrayIndex].size--;
+
+MERGED.A[MERGED.size++] = temp;
+
     }
 
     printf("\nMERGED ARRAY:\n");
