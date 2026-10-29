@@ -1,21 +1,11 @@
-/*
-18. Write a menu-driven program to read numerical data stored in a file and implement the
-following algorithms for sorting the numbers in descending order. Implement each algorithm as a
-separate function.
-(a) Bubble sort
-(b) Insertion Sort
-(c) Radix Sort
-(d) Merge Sort
-(e) Quick Sort
-Compare the number of steps involved in each method.
-*/
-
 #include <stdio.h>
 
 int COUNTS[5] = {0};
 int q_ar[100];
 int b_ar[100];
 int m_ar[100];
+int in_ar[100];
+int r_ar[100];
 
 void swap(int *arr, int i, int j)
 {
@@ -72,7 +62,7 @@ int PARTISION(int p, int r)
             }
             right--;
         }
-        
+
         if (left < right)
         {
             swap(q_ar, left, right);
@@ -162,7 +152,43 @@ void insertion_sort(int len){
 }
 
 
+void radix_sort(int len)
+{
+    int max = r_ar[0];
+    for (int i = 1; i < len; i++)
+    {
+        if (r_ar[i] > max)
+        {
+            max = r_ar[i];
+        }
+    }
 
+    int output[100];
+    for (int exp = 1; max / exp > 0; exp *= 10)
+    {
+        int count[10] = {0};
+
+        for (int i = 0; i < len; i++)
+        {
+            count[(r_ar[i] / exp) % 10]++;
+        }
+
+        for (int d = 8; d >= 0; d--)
+        {
+            count[d] += count[d + 1];
+        }
+        for (int i = len - 1; i >= 0; i--)
+        {
+            int d = (r_ar[i] / exp) % 10;
+            output[--count[d]] = r_ar[i];
+            COUNTS[2]++;
+        }
+        for (int i = 0; i < len; i++)
+        {
+            r_ar[i] = output[i];
+        }
+    }
+}
 
 int main()
 {
@@ -177,11 +203,13 @@ int main()
 
     int num, len, i = 0;
     printf("NUMBERS READ FROM FILE : ");
-    while (fscanf(fp, "%d", &num) != EOF)
+    while (i < 100 && fscanf(fp, "%d", &num) == 1)
     {
         q_ar[i] = num;
         b_ar[i] = num;
         m_ar[i] = num;
+        in_ar[i] = num;
+        r_ar[i] = num;
         i++;
         printf("%d ", num);
     }
@@ -214,7 +242,16 @@ int main()
 
             break;
         case 2:
+            COUNTS[1] = 0;
+            insertion_sort(len);
+            printf("INSERTION SORT\n");
+            printArray(in_ar, len);
+            break;
         case 3:
+            COUNTS[2] = 0;
+            radix_sort(len);
+            printf("RADIX SORT\n");
+            printArray(r_ar, len);
             break;
         case 4:
             COUNTS[3]=0;
